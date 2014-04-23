@@ -1,7 +1,8 @@
 (function(global) {
+    'use strict';
 
-    var APP_NAME = "lifxApp";
-    
+    var appConfig = global.appConfig;
+
     var rootRef = getRootRef();
 
     function getRootRef() {
@@ -10,7 +11,7 @@
 
     global.deferredBootstrapper.bootstrap({
         element: global.document.body,
-        module: APP_NAME,
+        module: appConfig.NAME,
         resolve: {
             LIFX: function($http, $q) {
                 var deferred = $q.defer();
@@ -31,13 +32,26 @@
         }
     });
 
-    angular.module(APP_NAME, ["firebase"])
-        .config(function(LIFX) {
-            log.debug('config successful: ' + JSON.stringify(LIFX));
-        })
-        .controller("BulbController", function($scope, $firebase, LIFX) {
-            var ref = rootRef.child("bulbs");
+    var app = angular.module(appConfig.NAME, [
+        'ngRoute',
+        appConfig.NAME + 'Controllers',
+        'firebase',
+    ]);
 
-            $scope.bulbs = $firebase(ref);
-        });
+
+    app.config(['LIFX', '$routeProvider',
+        function(LIFX, $routeProvider) {
+            log.debug('config successful: ' + JSON.stringify(LIFX));
+
+            $routeProvider.
+                when('/bulbs', {
+                    templateUrl: 'partials/bulbs.html',
+                    controller: 'BulbController'
+                }).
+                otherwise({
+                    redirectTo: '/bulbs'
+                });
+        }
+    ]);
+
 }(window));
