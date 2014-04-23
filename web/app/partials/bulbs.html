@@ -1,0 +1,6 @@
+
+    <div id="bulbs" ng-controller="BulbController" ng-cloak>
+        <div ng-repeat="bulb in bulbs">
+            <em>{{bulb.info.name || "[not set]"}}</em>: {{bulb.info.address}}
+        </div>
+    </div>
