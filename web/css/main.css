@@ -1,0 +1,14 @@
+#loading {
+    display: none;
+}
+.deferred-bootstrap-loading #loading {
+    display: block !important;
+}
+
+#error {
+    display: none;
+}
+.deferred-bootstrap-error #error {
+    display: block !important;
+    background: red;
+}
