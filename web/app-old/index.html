@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>My Lifx</title>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+</head>
+<body>
+    <div id="loading">
+        Loading...
+    </div>
+
+    <div id="error">
+        Could not load the app!
+    </div>
+
+    <div id="bulbs" ng-controller="BulbController" ng-cloak>
+        <div ng-repeat="bulb in bulbs">
+            <em>{{bulb.info.name || "[not set]"}}</em>: {{bulb.info.address}}
+        </div>
+    </div>
+
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/firebase/firebase.js"></script>
+    <script src="bower_components/angularfire/angularfire.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <script src="bower_components/angular-deferred-bootstrap/angular-deferred-bootstrap.js"></script>
+    <script src="scripts/logger.js"></script>
+    <script src="scripts/.firebaseConfig.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>

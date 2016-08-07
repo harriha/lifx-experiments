@@ -1,57 +1,24 @@
-(function(global) {
+(function(angular) {
     'use strict';
 
-    var appConfig = global.appConfig;
+    // Declare app level module which depends on filters, and services
+    var app = angular.module('myApp', [
+        'myApp.config',
+        'myApp.routes',
+        'myApp.filters',
+        'myApp.services',
+        'myApp.directives',
+        'myApp.controllers',
+        'simpleLoginTools',
+        'routeSecurity'
+    ])
 
-    var rootRef = getRootRef();
-
-    function getRootRef() {
-        return new Firebase(firebaseConfig.NAME);
-    }
-
-    global.deferredBootstrapper.bootstrap({
-        element: global.document.body,
-        module: appConfig.NAME,
-        resolve: {
-            LIFX: function($http, $q) {
-                var deferred = $q.defer();
-
-                rootRef.auth(firebaseConfig.AUTH_TOKEN, function(error, result) {
-                    if(error) {
-                        log.error('Authentication failed!', error);
-                        deferred.reject(new Error('Authentication failed'));
-                    } else {
-                        log.debug('Authenticated successfully with payload:', JSON.stringify(result));
-
-                        deferred.resolve(true);
-                    }
-                });
-
-                return deferred.promise;
-            }
-        }
-    });
-
-    var app = angular.module(appConfig.NAME, [
-        'ngRoute',
-        appConfig.NAME + 'Controllers',
-        'firebase',
-    ]);
-
-
-    app.config(['LIFX', '$routeProvider',
-        function(LIFX, $routeProvider) {
-            log.debug('config successful: ' + JSON.stringify(LIFX));
-
-            $routeProvider.
-                when('/bulbs', {
-                    templateUrl: 'partials/bulbs.html',
-                    controller: 'BulbController'
-                }).
-                otherwise({
-                    redirectTo: '/bulbs'
-                });
+    app.run(['loginService', '$rootScope', 'FBURL',
+        function(loginService, $rootScope, FBURL) {
+            // establish authentication
+            $rootScope.auth = loginService.init('/login');
+            $rootScope.FBURL = FBURL;
         }
     ]);
 
-}(window));
+}(angular));
